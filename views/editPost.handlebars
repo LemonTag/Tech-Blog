@@ -1,0 +1,58 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Post</title>
+</head>
+<body>
+  <div id="content"></div>
+
+  <!-- Include Handlebars from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script>
+    // Example post data
+    const postData = {
+      title: 'Sample Post Title',
+      content: 'This is the sample content of the post.'
+    };
+
+    // Define the Handlebars template for the edit post form
+    const source = `
+      <form id="edit-post-form">
+        <h2>Edit Post</h2>
+        <div>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title" value="{{title}}" required>
+        </div>
+        <div>
+          <label for="content">Content:</label>
+          <textarea id="content" name="content" required>{{content}}</textarea>
+        </div>
+        <button type="submit">Save Changes</button>
+      </form>
+    `;
+
+    // Compile the Handlebars template
+    const template = Handlebars.compile(source);
+
+    // Render the template with the post data and insert it into the DOM
+    document.getElementById('content').innerHTML = template(postData);
+
+    // Add event listener for form submission
+    document.getElementById('edit-post-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Retrieve form data
+      const title = event.target.title.value;
+      const content = event.target.content.value;
+
+      // Display form data in console (you can replace this with your edit post logic)
+      console.log('Title:', title);
+      console.log('Content:', content);
+
+      // You can add your logic here to save the changes, such as sending the data to a server
+
+      // Optionally reset the form or provide feedback to the user
+      // event.target.reset();
+    });
+  </script>
+</body>

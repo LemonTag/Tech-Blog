@@ -1,0 +1,61 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    /* Basic styles for the dashboard */
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 10px;
+      width: 300px;
+    }
+    .card h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="content"></div>
+
+  <!-- Include Handlebars from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script>
+    // Example dashboard data
+    const dashboardData = {
+      cards: [
+        { title: 'Users', value: 1200, description: 'Total registered users' },
+        { title: 'Posts', value: 300, description: 'Total number of posts' },
+        { title: 'Comments', value: 1500, description: 'Total number of comments' },
+        { title: 'Likes', value: 8000, description: 'Total number of likes' }
+      ]
+    };
+
+    // Define the Handlebars template for the dashboard
+    const source = `
+      <div class="dashboard">
+        <h1>Dashboard</h1>
+        {{#each cards}}
+          <div class="card">
+            <h3>{{title}}</h3>
+            <p>{{value}}</p>
+            <p>{{description}}</p>
+          </div>
+        {{/each}}
+      </div>
+    `;
+
+    // Compile the Handlebars template
+    const template = Handlebars.compile(source);
+
+    // Render the template with the dashboard data and insert it into the DOM
+    document.getElementById('content').innerHTML = template(dashboardData);
+  </script>
+</body>

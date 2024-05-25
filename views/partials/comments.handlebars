@@ -1,0 +1,63 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comments Section</title>
+  <style>
+    /* Basic styles for the comments section */
+    .comments-section {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .comment {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .comment:last-child {
+      border-bottom: none;
+    }
+    .comment h4 {
+      margin: 0;
+    }
+    .comment p {
+      margin: 5px 0 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="content"></div>
+
+  <!-- Include Handlebars from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script>
+    // Example comments data
+    const commentsData = {
+      comments: [
+        { author: 'John Doe', text: 'This is a great post!' },
+        { author: 'Jane Smith', text: 'Thanks for sharing this information.' },
+        { author: 'Sam Johnson', text: 'I found this very helpful.' }
+      ]
+    };
+
+    // Define the Handlebars template for the comments section
+    const source = `
+      <div class="comments-section">
+        <h2>Comments</h2>
+        {{#each comments}}
+          <div class="comment">
+            <h4>{{author}}</h4>
+            <p>{{text}}</p>
+          </div>
+        {{/each}}
+      </div>
+    `;
+
+    // Compile the Handlebars template
+    const template = Handlebars.compile(source);
+
+    // Render the template with the comments data and insert it into the DOM
+    document.getElementById('content').innerHTML = template(commentsData);
+  </script>
+</body>

@@ -1,0 +1,42 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handlebars Example</title>
+</head>
+<body>
+  <div id="content"></div>
+
+  <!-- Include Handlebars from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script>
+    // Example context data
+    const context = {
+      posts: [
+        { title: 'First Post' },
+        { title: 'Second Post' },
+        { title: 'Third Post' }
+      ]
+    };
+
+    // Handlebars template source
+    const source = `
+    <section>
+      {{#each posts as |postdata| }} 
+      <p>
+        {{postdata.title}}
+      </p>
+      {{/each}}
+      hello
+    </section>
+    `;
+
+    // Compile the template
+    const template = Handlebars.compile(source);
+
+    // Render the template with the context data
+    const html = template(context);
+
+    // Insert the rendered HTML into the DOM
+    document.getElementById('content').innerHTML = html;
+  </script>
+</body>
