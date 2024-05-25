@@ -1,8 +1,10 @@
-const express = require('express');
-const app = express();
+const router = require('express').Router();
 
-// ... other app configuration
+const userRouter = require('./userRoutes')
+const postRouter = require('./postRoutes');
 
-app.use('/', router); // Mount the router object at the root path
 
-app.listen(3000, () => console.log('Server listening on port 3000'));
+router.use('/user', userRouter); // Mount the router object at the root path
+
+router.use('/post', postRouter)
+module.exports = router
