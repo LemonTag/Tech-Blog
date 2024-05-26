@@ -1,65 +1,94 @@
 const router = require('express').Router();
-// Import the User model from the models folder
+const bcrypt = require('bcrypt'); // For password hashing
 const { User } = require('../../models');
 
-// If a POST request is made to /api/users, a new user is created. The user id and logged in state is saved to the session within the request object.
+
+
+// Middleware to parse incoming request bodies as JSON
 router.post('/', async (req, res) => {
+  console.log(req.body)
   try {
-    const userData = await User.create(req.body);
-
+    const signupuser = await User.create(req.body)
+    console.log(signupuser)
     req.session.save(() => {
-      req.session.user_id = userData.id;
-      req.session.logged_in = true;
-
-      res.status(200).json(userData);
-    });
+      req.session.user_id = signupuser.id
+      req.session.name = signupuser.name
+      req.session.logged_in = true
+    })
+    res.status(200).json(signupuser)
   } catch (err) {
-    res.status(400).json(err);
+    console.error(err)
+    res.status(500).json(err)
   }
-});
+})
 
-// If a POST request is made to /api/users/login, the function checks to see if the user information matches the information in the database and logs the user in. If correct, the user ID and logged-in state are saved to the session within the request object.
+// Login route handler (replace '/api/users/login' with your desired endpoint)
 router.post('/login', async (req, res) => {
+  const { username, email, password } = req.body;
+  console.log("hello world")
+console.log(username, email, password)
+  // Validate input (replace with more robust validation)
+  if (!username || !password || !email) {
+    return res.status(400).json({ message: 'Username, email, password are required' });
+  }
+
   try {
-    const userData = await User.findOne({ where: { email: req.body.email } });
+    // Find the user by username
+    const user = await User.findOne({ where: { username: req.body.username } });
 
-    if (!userData) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
+    // Check if user exists
+    if (!user) {
+      console.log("user not right")
+      return res.status(401).json({ message: 'Invalid credentials' });
+
     }
 
-    const validPassword = await userData.checkPassword(req.body.password);
-
-    if (!validPassword) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
+    if (!email) {
+      console.log("email not right")
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    // Compare password hashes (assuming password is hashed in the database)
+    const passwordMatch = await user.checkPassword(req.body.password);
+
+    if (!passwordMatch) {
+      console.log("password not right")
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Login successful (replace with session management or token generation)
     req.session.save(() => {
-      req.session.user_id = userData.id;
+      req.session.user_id = user.id;
+      req.session.username = user.username;
       req.session.logged_in = true;
-      
-      res.json({ user: userData, message: 'You are now logged in!' });
+      console.log(req.session)
+      res.status(200).json({
+        user,
+        message: 'You are now logged in!',
+      });
     });
 
-  } catch (err) {
-    res.status(400).json(err);
+  } catch (error) {
+    console.error(error);
+    // Check the error type and respond with a more specific status code and message
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      res.status(400).json({ message: 'Username already exists' });
+    } else {
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
   }
 });
 
-// If a POST request is made to /api/users/logout, the function checks the logged_in state in the request.session object and destroys that session if logged_in is true.
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
-      res.status(204).end();
-    });
-  } else {
-    res.status(404).end();
+      res.status(204).end()
+    })
+    console.log("logout")
   }
-});
+  else {
+    res.status(404).end()
+  }
+})
 
-module.exports = router;
+module.exports = router

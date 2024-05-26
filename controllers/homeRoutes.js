@@ -16,5 +16,44 @@ router.get('/', async(req, res) => {
   }
 })
 
+router.get('/homepage', async (req, res) => {
+  try {
+    console.log(req.session.logged_in);
+    res.render('homepage', {
+      logging_in: req.session.logged_in
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+})
+
+
+router.get('/dashboard', async (req, res) => {
+  try {
+    res.render('dashboard')
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+})
+
+router.get('/sign', async (req, res) => {
+  try {
+    res.render('login')
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+})
+
+router.get('/login', async (req, res) => {
+  try {
+    res.render('login')
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+})
 
 module.exports = router;
