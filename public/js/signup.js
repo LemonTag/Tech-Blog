@@ -1,14 +1,14 @@
 userRouter.post('/', async (req, res) => {
     try {
       const dbUserData = await User.create({
-        username: req.body.username,
+        user: req.body.user,
         password: req.body.password,
       });
   
       req.session.save(() => {
         req.session.loggedIn = true;
         req.session.user_id = dbUserData.id;
-        req.session.username = dbUserData.username;
+        req.session.user = dbUserData.user;
   
         res.status(200).json(dbUserData);
       });
